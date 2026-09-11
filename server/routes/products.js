@@ -2,25 +2,25 @@ import { Router } from "express";
 
 const router = Router();
 
-// In-memory products array
+// ข้อมูลสินค้าจำลองในหน่วยความจำ (In-memory products array)
 const products = [
   { id: "1", name: "Keyboard", price: 49.99, quantity: 5 },
   { id: "2", name: "Mouse", price: 29.99, quantity: 10 },
   { id: "3", name: "Monitor", price: 299.99, quantity: 3 },
 ];
 
-// GET /products — Read all products (supports ?name=xxx&sort=asc|desc)
+// GET /products — ดึงรายการสินค้าทั้งหมด (รองรับ ?name=xxx ค้นหาชื่อ & ?sort=asc|desc เรียงราคา)
 router.get("/", (req, res) => {
   let result = [...products];
 
-  // Filter by name (case-insensitive partial match)
+  // กรองตามชื่อสินค้า (ค้นหาแบบไม่สนตัวพิมพ์เล็ก-ใหญ่)
   if (req.query.name) {
     result = result.filter((p) =>
       p.name.toLowerCase().includes(req.query.name.toLowerCase()),
     );
   }
 
-  // Sort by price
+  // เรียงลำดับตามราคา
   if (req.query.sort === "asc") {
     result.sort((a, b) => a.price - b.price);
   } else if (req.query.sort === "desc") {
@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
   return res.status(200).json(result);
 });
 
-// GET /products/:id — Read one product
+// GET /products/:id — ดึงข้อมูลสินค้าชิ้นเดียวตาม ID
 router.get("/:id", (req, res) => {
   const product = products.find((p) => p.id === req.params.id);
 
@@ -41,7 +41,7 @@ router.get("/:id", (req, res) => {
   return res.status(200).json(product);
 });
 
-// POST /products — Create a new product
+// POST /products — เพิ่มสินค้าใหม่เข้าระบบ
 router.post("/", (req, res) => {
   const { name, price, quantity } = req.body;
 
@@ -60,7 +60,7 @@ router.post("/", (req, res) => {
   return res.status(201).json(newProduct);
 });
 
-// PUT /products/:id — Update a product
+// PUT /products/:id — แก้ไขข้อมูลสินค้าตาม ID
 router.put("/:id", (req, res) => {
   const index = products.findIndex((p) => p.id === req.params.id);
 
@@ -77,7 +77,7 @@ router.put("/:id", (req, res) => {
   return res.status(200).json(products[index]);
 });
 
-// DELETE /products/:id — Delete a product
+// DELETE /products/:id — ลบสินค้าตาม ID
 router.delete("/:id", (req, res) => {
   const index = products.findIndex((p) => p.id === req.params.id);
 

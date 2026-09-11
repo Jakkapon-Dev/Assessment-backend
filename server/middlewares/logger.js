@@ -1,5 +1,5 @@
 // Custom Middleware: Request Logger
-// Logs every incoming request with method, URL, and timestamp
+// บันทึก log ทุก request ที่เข้ามา โดยแสดง method, URL และเวลา
 export const requestLogger = (req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);

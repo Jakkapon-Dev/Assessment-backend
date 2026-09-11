@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 
-// Global Middleware
+// Global Middleware (ด่านตรวจส่วนกลางที่ทุก request ต้องผ่าน)
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
@@ -20,12 +20,12 @@ app.get("/", (req, res) => {
 
 app.use("/products", productsRouter);
 
-// 404 — no route matched
+// 404 Handler — จัดการกรณีไม่พบ Route ที่เรียกเข้ามา
 app.use((req, res) => {
   return res.status(404).json({ error: `Route ${req.originalUrl} not found` });
 });
 
-// Centralized/Global Error Handling Middleware
+// Centralized Error Handling Middleware — จัดการ Error รวมทั้งหมดใน Server
 app.use((err, req, res, next) => {
   console.error(err.stack);
   return res.status(err.status || 500).json({
