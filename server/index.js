@@ -1,0 +1,41 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import productsRouter from "./routes/products.js";
+import { requestLogger } from "./middlewares/logger.js";
+
+dotenv.config();
+
+const app = express();
+
+// Global Middleware
+app.use(cors());
+app.use(express.json());
+app.use(requestLogger);
+
+// Routes
+app.get("/", (req, res) => {
+  return res.send("Welcome to the API");
+});
+
+app.use("/products", productsRouter);
+
+// 404 — no route matched
+app.use((req, res) => {
+  return res.status(404).json({ error: `Route ${req.originalUrl} not found` });
+});
+
+// Centralized/Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  return res.status(err.status || 500).json({
+    error: "Something went wrong on the server...",
+    message: err.message,
+  });
+});
+
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log(`Server running on PORT:${PORT} 🟢`);
+});

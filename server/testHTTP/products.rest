@@ -1,0 +1,49 @@
+@baseUrl = http://localhost:4001/products
+
+### 1. Get all products
+GET {{baseUrl}}
+
+### 2. Get all products — filter by name
+GET {{baseUrl}}?name=key
+
+### 3. Get all products — sort by price (low to high)
+GET {{baseUrl}}?sort=asc
+
+### 4. Get all products — sort by price (high to low)
+GET {{baseUrl}}?sort=desc
+
+### 5. Get product by ID
+GET {{baseUrl}}/1
+
+### 6. Get product — not found
+GET {{baseUrl}}/999
+
+### 7. Create a new product
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "name": "Headphones",
+    "price": 79.99,
+    "quantity": 8
+}
+
+### 8. Create product — missing fields (should 400)
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "name": "No Price Item"
+}
+
+### 9. Update product
+PUT {{baseUrl}}/1
+Content-Type: application/json
+
+{
+    "name": "Mechanical Keyboard",
+    "price": 89.99
+}
+
+### 10. Delete product
+DELETE {{baseUrl}}/2

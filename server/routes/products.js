@@ -1,0 +1,92 @@
+import { Router } from "express";
+
+const router = Router();
+
+// In-memory products array
+const products = [
+  { id: "1", name: "Keyboard", price: 49.99, quantity: 5 },
+  { id: "2", name: "Mouse", price: 29.99, quantity: 10 },
+  { id: "3", name: "Monitor", price: 299.99, quantity: 3 },
+];
+
+// GET /products — Read all products (supports ?name=xxx&sort=asc|desc)
+router.get("/", (req, res) => {
+  let result = [...products];
+
+  // Filter by name (case-insensitive partial match)
+  if (req.query.name) {
+    result = result.filter((p) =>
+      p.name.toLowerCase().includes(req.query.name.toLowerCase()),
+    );
+  }
+
+  // Sort by price
+  if (req.query.sort === "asc") {
+    result.sort((a, b) => a.price - b.price);
+  } else if (req.query.sort === "desc") {
+    result.sort((a, b) => b.price - a.price);
+  }
+
+  return res.status(200).json(result);
+});
+
+// GET /products/:id — Read one product
+router.get("/:id", (req, res) => {
+  const product = products.find((p) => p.id === req.params.id);
+
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  return res.status(200).json(product);
+});
+
+// POST /products — Create a new product
+router.post("/", (req, res) => {
+  const { name, price, quantity } = req.body;
+
+  if (!name || price === undefined) {
+    return res.status(400).json({ error: "name and price are required" });
+  }
+
+  const newProduct = {
+    id: String(Date.now()),
+    name,
+    price: Number(price),
+    quantity: quantity !== undefined ? Number(quantity) : 1,
+  };
+
+  products.push(newProduct);
+  return res.status(201).json(newProduct);
+});
+
+// PUT /products/:id — Update a product
+router.put("/:id", (req, res) => {
+  const index = products.findIndex((p) => p.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  const { name, price, quantity } = req.body;
+
+  if (name !== undefined) products[index].name = name;
+  if (price !== undefined) products[index].price = Number(price);
+  if (quantity !== undefined) products[index].quantity = Number(quantity);
+
+  return res.status(200).json(products[index]);
+});
+
+// DELETE /products/:id — Delete a product
+router.delete("/:id", (req, res) => {
+  const index = products.findIndex((p) => p.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  const deleted = products.splice(index, 1);
+  return res.status(200).json({ message: "Product deleted", deleted: deleted[0] });
+});
+
+export default router;
