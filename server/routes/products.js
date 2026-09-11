@@ -9,7 +9,7 @@ const products = [
   { id: "3", name: "Monitor", price: 299.99, quantity: 3 },
 ];
 
-// GET /products — ดึงรายการสินค้าทั้งหมด (รองรับ ?name=xxx ค้นหาชื่อ & ?sort=asc|desc เรียงราคา)
+// GET /products — ดึงรายการสินค้าทั้งหมด (รองรับ ?name=xxx ค้นหาชื่อ & ?sort=asc|desc เรียงราคา,ai ช่วย)
 router.get("/", (req, res) => {
   let result = [...products];
 
