@@ -36,6 +36,11 @@ export function getProducts({ name, sort } = {}) {
   return request(query ? `/products?${query}` : "/products");
 }
 
+// GET /products/:id
+export function getProduct(id) {
+  return request(`/products/${id}`);
+}
+
 // POST /products
 export function createProduct(product) {
   return request("/products", jsonBody("POST", product));

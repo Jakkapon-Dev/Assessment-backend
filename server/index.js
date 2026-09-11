@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import productsRouter from "./routes/products.js";
 import { requestLogger } from "./middlewares/logger.js";
+import { connectDB } from "./config/db.js";
 
 dotenv.config();
 
@@ -36,6 +37,10 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on PORT:${PORT} 🟢`);
+// เชื่อมต่อ Database (MongoDB Atlas) ก่อนเปิดรับ request
+connectDB().finally(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on PORT:${PORT} 🟢`);
+  });
 });
+

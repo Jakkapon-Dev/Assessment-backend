@@ -6,7 +6,18 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: [true, "Price is required"] },
     quantity: { type: Number, default: 1 },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret.__v;
+        return ret;
+      },
+    },
+  },
 );
 
 export const Product = mongoose.model("Product", productSchema);
+

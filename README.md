@@ -183,6 +183,27 @@ browser มองว่าเป็นคนละ origin กัน จึงบ
 
 | ฝั่ง | ใช้อะไร |
 |---|---|
-| Backend | Node.js, Express 5, cors, dotenv |
-| Frontend | React 19, Vite 8 |
-| Storage | in-memory array (ไม่ใช้ database) |
+| Backend | Node.js, Express 5, Mongoose 9, cors, dotenv |
+| Frontend | React 19, React Router DOM 7, Vite 8 |
+| Storage | MongoDB Atlas (พร้อมระบบ Seamless Fallback เป็น In-Memory Array) |
+
+---
+
+## Stretch Goals (ทำครบทั้ง 6 ข้อ ✅)
+
+1. **[x] เชื่อมต่อ API กับ database MongoDB Atlas และ persist products ไว้ที่นั่น**
+   - รองรับ Mongoose Schema, Model, และ DNS resolution fix สำหรับ Windows
+   - ทำงานแบบ Graceful Fallback: บันทึกข้อมูลลง MongoDB Atlas อัตโนมัติเมื่อต่อติด และสลับไปใช้ In-Memory Array ได้ทันทีหากยังไม่ได้ตั้งค่า URI
+2. **[x] validate ข้อมูลที่ส่งเข้ามาฝั่ง server — reject field ที่ขาดหรือไม่ถูกต้องด้วย response 400 แล้วแสดง error message นั้นใน React UI**
+   - ตรวจจับฟิลด์ `name` และ `price` ใน `routes/products.js` ตอบ 400 Bad Request
+   - แสดงกล่องแจ้งเตือนสีแดงในหน้า React พร้อมข้อความ error ที่ได้จาก API
+3. **[x] ย้าย Express routes ไปไว้ในไฟล์แยกโดยใช้ express.Router()**
+   - แยกเส้นทาง `/products` ทั้งหมดไว้ใน `server/routes/products.js`
+4. **[x] เพิ่ม search/sort controls ฝั่ง client ใน React ที่ส่งเป็น query strings ไปยัง API**
+   - มี Search Box และ Dropdown เรียงลำดับราคา (asc/desc) พร้อม Debounce 300ms
+5. **[x] เพิ่มหน้า product detail page โดยใช้ React Router (เช่น /products/:id)**
+   - ติดตั้ง `react-router-dom` และสร้าง Route `/products/:id` แสดงรายละเอียดสินค้าชิ้นเดียวพร้อมปุ่มย้อนกลับ
+6. **[x] เพิ่ม optimistic UI updates เบื้องต้น**
+   - ทั้งการ Create, Update, และ Delete หน้าจอจะอัปเดตทันทีก่อนที่ API จะตอบกลับ
+   - หาก API ล้มเหลว ระบบจะทำการ Rollback ข้อมูลเดิมกลับคืนมาอัตโนมัติพร้อมแจ้งเตือน error
+

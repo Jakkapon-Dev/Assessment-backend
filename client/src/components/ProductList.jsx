@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 // component ตัวนี้ไม่มี state ของตัวเอง — รับ products มาแสดง
 // แล้วยิง event กลับขึ้นไปให้ App จัดการ (App เป็นเจ้าของ state ทั้งหมด)
-export default function ProductList({ products, onEdit, onDelete, busyId }) {
+export default function ProductList({ products, onEdit, onDelete }) {
   if (products.length === 0) {
     return <p className="empty">No products yet. Add one above.</p>;
   }
@@ -18,10 +20,17 @@ export default function ProductList({ products, onEdit, onDelete, busyId }) {
       <tbody>
         {products.map((product) => (
           <tr key={product.id}>
-            <td>{product.name}</td>
-            <td className="num">{product.price.toFixed(2)}</td>
+            <td>
+              <Link to={`/products/${product.id}`} className="product-title-link">
+                {product.name}
+              </Link>
+            </td>
+            <td className="num">{Number(product.price).toFixed(2)}</td>
             <td className="num">{product.quantity}</td>
             <td className="row-actions">
+              <Link to={`/products/${product.id}`} className="btn-link">
+                View
+              </Link>
               <button type="button" onClick={() => onEdit(product)}>
                 Edit
               </button>
@@ -29,9 +38,8 @@ export default function ProductList({ products, onEdit, onDelete, busyId }) {
                 type="button"
                 className="danger"
                 onClick={() => onDelete(product)}
-                disabled={busyId === product.id}
               >
-                {busyId === product.id ? "Deleting..." : "Delete"}
+                Delete
               </button>
             </td>
           </tr>
