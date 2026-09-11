@@ -4,13 +4,23 @@ node_modules/
 # environment
 .env
 .env.local
+.env.*.local
 
 # build output
 dist/
 
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # editor / OS
 .DS_Store
 .vscode/
+.idea/
 
-# assessment brief (separate repo, reference only)
+# assessment brief & guides (local only)
 jsd-backend-assessment/
+WORKLOG.md
+CODE-GUIDE.md
